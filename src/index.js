@@ -3,23 +3,27 @@ import scrapeProductData from "./services/product-scraper.js";
 import scrapeCategoryData from "./services/category-scraper.js";
 import generateScrapedDataCSV from "./services/csv-generator.js";
 
-const BASE_URL = process.env.WEBSITE_CATEGORY_URL;
+const URLS = process.env.WEBSITE_CATEGORY_URLS;
 
-if (!BASE_URL) {
+if (!URLS) {
   console.error(
-    "⚠️ WEBSITE_CATEGORY_URL is not set. Please provide it in a .env file."
+    "⚠️ WEBSITE_CATEGORY_URLS is not set. Please provide it in a .env file."
   );
   process.exit(1);
 }
 
+const URLS_ARRAY = URLS.split(",").map((url) => url.trim());
+
 async function main() {
-  const results = [];
-  try {
-    await scrapeCategoryData(BASE_URL, scrapeProductData, results);
-    generateScrapedDataCSV(results);
-  } catch (error) {
-    console.error("Scraping failed:", error);
-    process.exit(1);
+  for (const URL of URLS_ARRAY) {
+    const results = [];
+    try {
+      await scrapeCategoryData(URL, scrapeProductData, results);
+      generateScrapedDataCSV(results);
+    } catch (error) {
+      console.error("Scraping failed:", error);
+      process.exit(1);
+    }
   }
 }
 

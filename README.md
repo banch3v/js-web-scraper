@@ -1,6 +1,6 @@
 # js-web-scraper
 
-**js-web-scraper** is a simple tool for scraping product data from a given category URL and exporting the results as a `.csv` file.
+**js-web-scraper** is a simple tool for scraping product data from a given category URL or multiple URLs and exporting the results as a `.csv` file.
 
 ## Usage
 
@@ -21,7 +21,7 @@
 3. Create a `.env` file and set the target category URL and sleeper time to reduce the change of getting flagged:
 
    ```
-   WEBSITE_CATEGORY_URL=<your-category-url>
+   WEBSITE_CATEGORY_URLS="https://example.com/category1,https://example.com/category2,https://example.com/category3"
    DELAY_BETWEEN_OPERATIONS_MS=10000
    ```
 
