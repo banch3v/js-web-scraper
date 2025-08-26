@@ -1,5 +1,6 @@
 import { writeToPath } from "@fast-csv/format";
 import fs from "fs";
+import normalizeResult from "../utils/normalize.js";
 
 /**
  * Writes scraped results to a timestamped CSV file.
@@ -16,7 +17,9 @@ function generateScrapedDataCSV(results) {
     .replace(/:/g, "-")
     .replace(/\.\d{3}Z$/, "");
 
-  writeToPath(`${outputDir}/table-${timestamp}.csv`, results, {
+  const normalizedResults = normalizeResult(results);
+
+  writeToPath(`${outputDir}/table-${timestamp}.csv`, normalizedResults, {
     headers: true,
   }).on("finish", () => console.log("✅ CSV successfully created"));
 }
