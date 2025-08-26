@@ -18,7 +18,7 @@ function generateScrapedDataCSV(results) {
 
   writeToPath(`${outputDir}/table-${timestamp}.csv`, results, {
     headers: true,
-  }).on("finish", () => console.log("CSV written"));
+  }).on("finish", () => console.log("✅ CSV successfully created"));
 }
 
 export default generateScrapedDataCSV;
