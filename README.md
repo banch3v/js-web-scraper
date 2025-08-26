@@ -29,7 +29,7 @@
 
 5. Run the scraper:
    ```bash
-   node index.js
+   node ./src/index.js
    ```
    Or use the VS Code **Code Runner** extension (as I do).
 
