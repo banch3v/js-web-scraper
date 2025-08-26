@@ -6,7 +6,7 @@ import fs from "fs";
  * @param {Array} results - The array of scraped data objects.
  */
 function generateScrapedDataCSV(results) {
-  const outputDir = "./src/output";
+  const outputDir = "./output";
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
