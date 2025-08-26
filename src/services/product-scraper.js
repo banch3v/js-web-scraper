@@ -42,7 +42,7 @@ const scrapeProductData = async (url, results) => {
       brand,
       ...techData,
     });
-    console.log("Product scraped successfully:", productTitle);
+    console.log("📝 Product scraped successfully:", productTitle);
   } catch (error) {
     throw error;
   }
