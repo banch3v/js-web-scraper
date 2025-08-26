@@ -41,7 +41,7 @@ const scrapeCategoryData = async (url, scrapeProductData, results) => {
     if (nextPage.length > 0) {
       const nextPageURL = nextPage.attr("href");
       console.log("✅ Navigating to next page:", nextPageURL);
-      await scrapeCategoryData(nextPageURL);
+      await scrapeCategoryData(nextPageURL, scrapeProductData, results);
     } else {
       console.log("⛔ No more pages to scrape.");
     }

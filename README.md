@@ -42,3 +42,4 @@
   - **Windows:** `ipconfig /flushdns`
 - The current setup includes delays and browser-like headers to reduce blocking.  
   If you add operations that send requests too quickly, use a **sleeper** function (found in `./src/utils`) to slow them down.
+- Running the project in GitHub Codespaces is also an option, in case you don't have a VPN
