@@ -18,10 +18,11 @@
    npm install
    ```
 
-3. Create a `.env` file and set the target category URL:
+3. Create a `.env` file and set the target category URL and sleeper time to reduce the change of getting flagged:
 
    ```
    WEBSITE_CATEGORY_URL=<your-category-url>
+   DELAY_BETWEEN_OPERATIONS_MS=10000
    ```
 
 4. Adjust the logic in `product-scraper.js` and `category-scraper.js` as needed.

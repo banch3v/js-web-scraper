@@ -1,6 +1,9 @@
+import "dotenv/config";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import sleep from "../utils/sleep.js";
+
+const sleepDuration = process.env.DELAY_BETWEEN_OPERATIONS_MS || 10000;
 
 /**
  * Scrapes product data from a given category URL.
@@ -27,11 +30,11 @@ const scrapeCategoryData = async (url, scrapeProductData, results) => {
     });
 
     for (const productURL of productURLs) {
-      await sleep(10000);
+      await sleep(sleepDuration);
       await scrapeProductData(productURL, results);
     }
 
-    await sleep(10000);
+    await sleep(sleepDuration);
 
     const nextPage = $(".pagination .next");
 
