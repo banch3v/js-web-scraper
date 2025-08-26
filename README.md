@@ -1,2 +1,43 @@
 # js-web-scraper
-JavaScript Web Scraper
+
+**js-web-scraper** is a simple tool for scraping product data from a given category URL and exporting the results as a `.csv` file.
+
+## Usage
+
+1. Clone the repository:
+
+   ```bash
+   git clone <repo-url>
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   yarn install
+   # or
+   npm install
+   ```
+
+3. Create a `.env` file and set the target category URL:
+
+   ```
+   WEBSITE_CATEGORY_URL=<your-category-url>
+   ```
+
+4. Adjust the logic in `product-scraper.js` and `category-scraper.js` as needed.
+
+5. Run the scraper:
+   ```bash
+   node index.js
+   ```
+   Or use the VS Code **Code Runner** extension (as I do).
+
+## Notes
+
+- Be careful not to get flagged by the website you're trying to scrape.
+- Using a **VPN** is highly recommended and can help if the target site blocks your requests.
+- Some hosts block by **IP**, others by **DNS**, third both. If flagged, first change your IP and try flushing your DNS cache:
+  - **Ubuntu:** `sudo resolvectl flush-caches`
+  - **Windows:** `ipconfig /flushdns`
+- The current setup includes delays and browser-like headers to reduce blocking.  
+  If you add operations that send requests too quickly, use a **sleeper** function (found in `./src/utils`) to slow them down.
