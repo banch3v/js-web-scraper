@@ -19,10 +19,14 @@ console.log(URLS_ARRAY);
 
 async function main() {
   for (const URL of URLS_ARRAY) {
+    console.log("🚀 Starting new scraping for category URL:", URL, "\n");
     const results = [];
+    const startDate = new Date();
     try {
       await scrapeCategoryData(URL, scrapeProductData, results);
       generateScrapedDataCSV(results);
+      const endDate = new Date();
+      executionTimeLog(startDate, endDate, URL);
     } catch (error) {
       console.error("Scraping failed:", error);
       process.exit(1);

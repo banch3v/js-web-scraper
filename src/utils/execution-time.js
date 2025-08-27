@@ -11,11 +11,9 @@ const executionTimeLog = (startDate, endDate, url) => {
   const seconds = Math.floor((timeDiff / 1000) % 60);
   const minutes = Math.floor((timeDiff / (1000 * 60)) % 60);
   const hours = Math.floor((timeDiff / (1000 * 60 * 60)) % 24);
-  console.log("");
   console.log(
-    `✅ Scraping ${url} completed in ${hours}h ${minutes}m ${seconds}s`
+    `\n✅ Scraping ${url} completed in ${hours}h ${minutes}m ${seconds}s\n`
   );
-  console.log("");
 };
 
 export default executionTimeLog;
