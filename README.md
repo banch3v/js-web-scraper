@@ -28,10 +28,20 @@
 4. Adjust the logic in `product-scraper.js` and `category-scraper.js` as needed.
 
 5. Run the scraper:
+
    ```bash
    node ./src/index.js
    ```
-   Or use the VS Code **Code Runner** extension (as I do).
+
+   Or run it with the **VS Code Code Runner** extension (my preferred method).
+
+   To keep a log you can review later, run:
+
+   ```bash
+   node ./src/index.js 2>&1 | tee scraper.log
+   ```
+
+   This will create a `scraper.log` file in the project root while still showing live logs in the terminal.
 
 ## Notes
 
