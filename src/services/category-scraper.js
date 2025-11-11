@@ -24,27 +24,40 @@ const scrapeCategoryData = async (url, scrapeProductData, results) => {
     const $ = cheerio.load(data);
 
     const productURLs = [];
-    $(".main-products.product-grid .product-layout").each((_i, el) => {
-      const productURL = $(el).find(".product-thumb .image a").attr("href");
-      productURLs.push(productURL);
+    $(".product-list-items .product-list-item").each((_i, item) => {
+      const anchor = $(item).find("a.product-list-item-link");
+      const href = anchor.attr("href");
+      if (!href) {
+        console.warn("⚠️ Missing href attribute.");
+        return;
+      }
+
+      try {
+        const absolute = new URL(href, url).href;
+        productURLs.push(absolute);
+      } catch (e) {
+        console.warn(`⚠️ Skipping invalid URL: ${href}`);
+      }
     });
 
-    for (const productURL of productURLs) {
-      await sleep(sleepDuration);
-      await scrapeProductData(productURL, results);
-    }
+    console.log(productURLs);
+
+    // for (const productURL of productURLs) {
+    //   await sleep(sleepDuration);
+    //   await scrapeProductData(productURL, results);
+    // }
 
     await sleep(sleepDuration);
 
-    const nextPage = $(".pagination .next");
+    // const nextPage = $("a.paging-navigation-link-next");
 
-    if (nextPage.length > 0) {
-      const nextPageURL = nextPage.attr("href");
-      console.log("\n♻️ Navigating to next page:", nextPageURL, "\n");
-      await scrapeCategoryData(nextPageURL, scrapeProductData, results);
-    } else {
-      console.log("\n⛔ No more pages to scrape.\n");
-    }
+    // if (nextPage.length > 0) {
+    //   const nextPageURL = nextPage.attr("href");
+    //   console.log("\n♻️ Navigating to next page:", nextPageURL, "\n");
+    //   await scrapeCategoryData(nextPageURL, scrapeProductData, results);
+    // } else {
+    //   console.log("\n⛔ No more pages to scrape.\n");
+    // }
   } catch (error) {
     throw error;
   }
