@@ -35,8 +35,8 @@ const scrapeProductData = async (url, results) => {
     let wasPrevRowEmpty = false;
     let techSpecNameOne = "";
     let techSpecNameTwo = "";
-    $(`.technical-characteristics tbody tr`).each((i, el) => {
-      const tdsArray = $(el).find("td");
+    $(`.technical-characteristics table tr`).each((i, el) => {
+      const tdsArray = $(el).children("td, th");
 
       if (tdsArray.length < 3) {
         console.warn(
@@ -94,13 +94,14 @@ const scrapeProductData = async (url, results) => {
           ? `${specTitle} (${specSymbol})`.trim()
           : specTitle;
         techData[`${specTitleAndSymbol} ${techSpecNameOne}`] = specValue1;
-        techData[`${specTitleAndSymbol} ${techSpecNameTwo}`] = specValue2;
+
+        if (specValue2) {
+          techData[`${specTitleAndSymbol} ${techSpecNameTwo}`] = specValue2;
+        }
         wasPrevRowEmpty = false;
         return;
       }
     });
-
-    const images = [];
 
     results.push({
       productTitle,

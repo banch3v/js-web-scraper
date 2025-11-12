@@ -3,8 +3,10 @@ import scrapeProductData from "./services/product-scraper.js";
 import scrapeCategoryData from "./services/category-scraper.js";
 import generateScrapedDataCSV from "./services/csv-generator.js";
 import executionTimeLog from "./utils/execution-time.js";
+import parseEnvCategoryUrls from "./utils/parse-env-data.js";
 
 const URLS = process.env.WEBSITE_CATEGORY_URLS;
+
 if (!URLS) {
   console.error(
     "⚠️ WEBSITE_CATEGORY_URLS is not set. Please provide it in a .env file."
@@ -12,24 +14,26 @@ if (!URLS) {
   process.exit(1);
 }
 
-const URLS_ARRAY = URLS.split(",").map((url) => url.trim());
+const CATEGORY_ARRAY = parseEnvCategoryUrls(URLS);
 
-console.log(URLS_ARRAY);
+console.log(CATEGORY_ARRAY);
 
 async function main() {
-  for (const URL of URLS_ARRAY) {
-    console.log("🚀 Starting new scraping for category URL:", URL, "\n");
+  for (const cluster of CATEGORY_ARRAY) {
     const results = [];
     const startDate = new Date();
-    try {
-      await scrapeCategoryData(URL, scrapeProductData, results);
-      generateScrapedDataCSV(results);
-      const endDate = new Date();
-      executionTimeLog(startDate, endDate, URL);
-    } catch (error) {
-      console.error("Scraping failed:", error);
-      process.exit(1);
+    for (const URL of cluster) {
+      console.log("🚀 Starting new scraping for category URL:", URL, "\n");
+      try {
+        await scrapeCategoryData(URL, scrapeProductData, results);
+      } catch (error) {
+        console.error("Scraping failed:", error);
+        process.exit(1);
+      }
     }
+    generateScrapedDataCSV(results);
+    const endDate = new Date();
+    executionTimeLog(startDate, endDate, cluster);
   }
 }
 
