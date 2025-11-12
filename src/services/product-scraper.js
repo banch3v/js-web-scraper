@@ -19,27 +19,93 @@ const scrapeProductData = async (url, results) => {
     });
     const $ = cheerio.load(data);
 
-    const productTitle = $(".product-details .title.page-title").text().trim();
+    // Extract product title
+    const productTitle = $(".single-product-name").text().trim();
 
-    const shortDescription = [];
-    $(".product-info .short_description .shortDesc p").each((_i, el) => {
-      shortDescription.push($(el).text().trim());
-    });
+    // Extract product short description
+    const shortDescription = $(".single-product-list-characteristics")
+      .text()
+      .trim();
 
-    const brand = $(".product-manufacturer a").text().trim();
+    // Extract product brand
+    // const brand = $(".product-manufacturer a").text().trim();
 
+    // Extract product technical characteristics
     const techData = {};
-    $(`.table.table-bordered tbody tr`).each((_i, el) => {
-      const specTitle = $(el).find("td").first().text().trim();
-      const specValue = $(el).find("td").last().text().trim();
+    let wasPrevRowEmpty = false;
+    let techSpecNameOne = "";
+    let techSpecNameTwo = "";
+    $(`.technical-characteristics tbody tr`).each((i, el) => {
+      const tdsArray = $(el).find("td");
 
-      techData[specTitle] = specValue;
+      if (tdsArray.length < 3) {
+        console.warn(
+          `⚠️ ${productTitle} table row has less than 3 columns, skipping.`
+        );
+        return;
+      }
+
+      if (tdsArray.length === 3) {
+        if (i === 0) return; // skip first header row
+        if (wasPrevRowEmpty) return; // skip rows after empty row (headings)
+
+        const specTitle = tdsArray.eq(0).text().trim() || "";
+        const specSymbol = tdsArray.eq(1).text().trim() || "";
+        const specValue = tdsArray.eq(2).text().trim() || "";
+
+        if (!specTitle && !specSymbol && !specValue) {
+          wasPrevRowEmpty = true; // empty row
+          return;
+        }
+
+        const specTitleAndSymbol = specSymbol
+          ? `${specTitle} (${specSymbol})`.trim()
+          : specTitle;
+        techData[specTitleAndSymbol] = specValue;
+        wasPrevRowEmpty = false;
+        return;
+      }
+
+      if (tdsArray.length === 4) {
+        const specTitle = tdsArray.eq(0).text().trim() || "";
+        const specSymbol = tdsArray.eq(1).text().trim() || "";
+        const specValue1 = tdsArray.eq(2).text().trim() || "";
+        const specValue2 = tdsArray.eq(3).text().trim() || "";
+
+        if (i === 0) {
+          techSpecNameOne = specValue1;
+          techSpecNameTwo = specValue2;
+          return; // skip header row
+        }
+
+        if (!specTitle && !specSymbol && !specValue1 && !specValue2) {
+          wasPrevRowEmpty = true;
+          return; // empty row
+        }
+
+        if (wasPrevRowEmpty) {
+          techSpecNameOne = specValue1;
+          techSpecNameTwo = specValue2;
+          wasPrevRowEmpty = false;
+          return;
+        }
+
+        const specTitleAndSymbol = specSymbol
+          ? `${specTitle} (${specSymbol})`.trim()
+          : specTitle;
+        techData[`${specTitleAndSymbol} ${techSpecNameOne}`] = specValue1;
+        techData[`${specTitleAndSymbol} ${techSpecNameTwo}`] = specValue2;
+        wasPrevRowEmpty = false;
+        return;
+      }
     });
+
+    const images = [];
 
     results.push({
       productTitle,
-      shortDescription: shortDescription.join("\n"),
-      brand,
+      shortDescription,
+      // brand,
       ...techData,
     });
     console.log("📝 Product scraped successfully:", productTitle);

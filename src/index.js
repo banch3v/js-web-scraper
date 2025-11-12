@@ -5,7 +5,6 @@ import generateScrapedDataCSV from "./services/csv-generator.js";
 import executionTimeLog from "./utils/execution-time.js";
 
 const URLS = process.env.WEBSITE_CATEGORY_URLS;
-
 if (!URLS) {
   console.error(
     "⚠️ WEBSITE_CATEGORY_URLS is not set. Please provide it in a .env file."

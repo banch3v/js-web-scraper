@@ -40,17 +40,15 @@ const scrapeCategoryData = async (url, scrapeProductData, results) => {
       }
     });
 
-    console.log(productURLs);
-
-    // for (const productURL of productURLs) {
-    //   await sleep(sleepDuration);
-    //   await scrapeProductData(productURL, results);
-    // }
+    for (const productURL of productURLs) {
+      await sleep(sleepDuration);
+      await scrapeProductData(productURL, results);
+    }
 
     await sleep(sleepDuration);
 
+    //// No next page due to javascript navigation
     // const nextPage = $("a.paging-navigation-link-next");
-
     // if (nextPage.length > 0) {
     //   const nextPageURL = nextPage.attr("href");
     //   console.log("\n♻️ Navigating to next page:", nextPageURL, "\n");
