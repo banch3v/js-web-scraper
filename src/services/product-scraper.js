@@ -24,6 +24,8 @@ const scrapeProductData = async (url, results) => {
       .text()
       .trim();
 
+    const productSKU = $(".sku_wrapper .sku").text().trim();
+
     const images = [];
     $(".wd-gallery-thumb .wd-carousel-wrap img").each((_i, el) => {
       const img = $(el);
@@ -49,29 +51,36 @@ const scrapeProductData = async (url, results) => {
     //   shortDescription.push($(el).text().trim());
     // });
 
-    const brand = $(".product_meta .posted_in").filter((i, el) => {
+    let brand = "";
+    $(".product_meta .posted_in").each((i, el) => {
       const label = $(el).find(".meta-label").text().trim().toLowerCase();
       if (label.includes("марка")) {
-        return $(el).find("a").text().trim();
-      } else return "";
+        brand = $(el).find("a").text().trim();
+        return false; // break out of the loop
+      }
     });
 
     const techData = {};
     $(`.woocommerce-product-attributes tbody tr`).each((_i, el) => {
-      const specTitle = $(el).find("td").first().text().trim();
-      const specValue = $(el).find("td").last().text().trim();
+      const specTitle = $(el).find("th").text().trim();
+      const specValue = $(el).find("td").text().trim();
 
       techData[specTitle] = specValue;
     });
 
     results.push({
-      productTitle,
+      sku: productSKU,
+      title: productTitle,
       // shortDescription: shortDescription.join("\n"),
       brand,
       images,
       ...techData,
     });
     console.log("📝 Product scraped successfully:", productTitle);
+    console.log("title: ", productTitle);
+    console.log("brand: ", brand);
+    console.log("images: ", images);
+    console.log("techData: ", techData);
   } catch (error) {
     throw error;
   }

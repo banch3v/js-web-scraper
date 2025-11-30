@@ -24,9 +24,9 @@ const scrapeCategoryData = async (url, scrapeProductData, results) => {
     const $ = cheerio.load(data);
 
     const productURLs = [];
-    $(".products.wd-products").each((_i, el) => {
+    $(".products.wd-products .wd-product").each((_i, el) => {
       const productURL = $(el)
-        .find(".wd-product .product-wrapper .product-element-top a")
+        .find(".product-wrapper .product-element-top a")
         .attr("href");
       productURLs.push(productURL);
     });
