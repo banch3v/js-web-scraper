@@ -24,8 +24,10 @@ const scrapeCategoryData = async (url, scrapeProductData, results) => {
     const $ = cheerio.load(data);
 
     const productURLs = [];
-    $(".main-products.product-grid .product-layout").each((_i, el) => {
-      const productURL = $(el).find(".product-thumb .image a").attr("href");
+    $(".products.wd-products").each((_i, el) => {
+      const productURL = $(el)
+        .find(".wd-product .product-wrapper .product-element-top a")
+        .attr("href");
       productURLs.push(productURL);
     });
 
@@ -36,7 +38,7 @@ const scrapeCategoryData = async (url, scrapeProductData, results) => {
 
     await sleep(sleepDuration);
 
-    const nextPage = $(".pagination .next");
+    const nextPage = $(".woocommerce-pagination.wd-pagination .next");
 
     if (nextPage.length > 0) {
       const nextPageURL = nextPage.attr("href");
