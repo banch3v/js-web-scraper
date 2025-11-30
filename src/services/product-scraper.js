@@ -18,6 +18,10 @@ const scrapeProductData = async (url, results) => {
           "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       },
     });
+
+    // Small delay to ensure page content is fully received
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
     const $ = cheerio.load(data);
 
     const productTitle = $(".product_title.entry-title.wd-entities-title")
@@ -29,7 +33,8 @@ const scrapeProductData = async (url, results) => {
     const images = [];
     $(".wd-gallery-thumb .wd-carousel-wrap img").each((_i, el) => {
       const img = $(el);
-      const raw = img.attr("srcset");
+      const raw =
+        img.attr("srcset") || img.attr("data-srcset") || img.attr("src") || "";
       let imageUrl = extractImgFromSrcset(raw) || raw || "";
       if (!imageUrl) return;
       if (imageUrl.startsWith("//")) imageUrl = "https:" + imageUrl;
@@ -41,11 +46,13 @@ const scrapeProductData = async (url, results) => {
       if (imageUrl && !images.includes(imageUrl)) images.push(imageUrl);
     });
 
+    //Fallback image
     if (images.length === 0) {
-      const singleImage =
-        $(".wd-carousel-item.wd-active img").attr("src") || "";
-
-      singleImage && images.push(singleImage);
+      images.push(
+        $(
+          ".woocommerce-product-gallery__wrapper .wd-carousel-item .woocommerce-product-gallery__image a"
+        ).attr("href")
+      );
     }
 
     // const shortDescription = [];
