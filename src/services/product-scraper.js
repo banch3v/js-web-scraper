@@ -29,12 +29,7 @@ const scrapeProductData = async (url, results) => {
     const images = [];
     $(".wd-gallery-thumb .wd-carousel-wrap img").each((_i, el) => {
       const img = $(el);
-      const raw =
-        img.attr("data-srcset") ||
-        img.attr("srcset") ||
-        img.attr("data-src") ||
-        img.attr("src") ||
-        "";
+      const raw = img.attr("srcset");
       let imageUrl = extractImgFromSrcset(raw) || raw || "";
       if (!imageUrl) return;
       if (imageUrl.startsWith("//")) imageUrl = "https:" + imageUrl;
@@ -45,6 +40,13 @@ const scrapeProductData = async (url, results) => {
       }
       if (imageUrl && !images.includes(imageUrl)) images.push(imageUrl);
     });
+
+    if (images.length === 0) {
+      const singleImage =
+        $(".wd-carousel-item.wd-active img").attr("src") || "";
+
+      singleImage && images.push(singleImage);
+    }
 
     // const shortDescription = [];
     // $(".product-info .short_description .shortDesc p").each((_i, el) => {
@@ -77,10 +79,7 @@ const scrapeProductData = async (url, results) => {
       ...techData,
     });
     console.log("📝 Product scraped successfully:", productTitle);
-    console.log("title: ", productTitle);
-    console.log("brand: ", brand);
     console.log("images: ", images);
-    console.log("techData: ", techData);
   } catch (error) {
     throw error;
   }
