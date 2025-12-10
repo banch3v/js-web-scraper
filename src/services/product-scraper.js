@@ -70,12 +70,15 @@ const scrapeProductData = async (url, results) => {
     });
 
     const techData = {};
-    $(`.woocommerce-product-attributes tbody tr`).each((_i, el) => {
-      const specTitle = $(el).find("th").text().trim();
-      const specValue = $(el).find("td").text().trim();
+    $(`.woocommerce-product-attributes tbody`)
+      .first()
+      .find(`tr`)
+      .each((_i, el) => {
+        const specTitle = $(el).find("th").text().trim();
+        const specValue = $(el).find("td").text().trim();
 
-      techData[specTitle] = specValue;
-    });
+        techData[specTitle] = specValue;
+      });
 
     results.push({
       sku: productSKU,
@@ -85,8 +88,12 @@ const scrapeProductData = async (url, results) => {
       images,
       ...techData,
     });
-    console.log("📝 Product scraped successfully:", productTitle);
-    console.log("images: ", images);
+
+    console.log("✅ Scraped product:", productTitle);
+    console.log("SKU: ", productSKU);
+    console.log("Brand: ", brand);
+    console.log("Images: ", images);
+    console.log("TechData: ", techData);
   } catch (error) {
     throw error;
   }
