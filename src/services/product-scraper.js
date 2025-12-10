@@ -90,10 +90,6 @@ const scrapeProductData = async (url, results) => {
     });
 
     console.log("✅ Scraped product:", productTitle);
-    console.log("SKU: ", productSKU);
-    console.log("Brand: ", brand);
-    console.log("Images: ", images);
-    console.log("TechData: ", techData);
   } catch (error) {
     throw error;
   }
